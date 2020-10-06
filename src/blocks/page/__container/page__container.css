@@ -1,0 +1,14 @@
+.page__container {
+    max-width: 882px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 640px) {
+    .page__container {
+      max-width: 282px;  
+    }  
+  } 

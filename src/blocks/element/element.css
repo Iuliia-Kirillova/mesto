@@ -1,0 +1,15 @@
+@import url(./__photo/element__photo.css);
+@import url(./__caption/element__caption.css);
+@import url(./__name/element__name.css);
+@import url(./__heart/element__heart.css);
+@import url(./_like/element__heart_like.css);
+@import url(./__delete/element__delete.css);
+
+.element {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 282px;
+    border-radius: 10px;
+    overflow: hidden;
+}

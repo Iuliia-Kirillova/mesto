@@ -1,0 +1,23 @@
+.profile__title {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 42px;
+    line-height: 56px;
+    color: #FFFFFF;
+    margin: 0 0 16px 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 500px;
+}
+
+@media (max-width: 640px) {
+    .profile__title {
+        max-width: 200px;
+        font-size: 27px;
+        line-height: 56px;
+        text-align: center;
+        
+
+    } 
+}
