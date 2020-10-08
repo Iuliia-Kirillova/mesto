@@ -3,7 +3,7 @@ export const addCardModal = document.querySelector('.popup_type_add-card');
 export const editProfileModal = document.querySelector('.popup_type_edit-profile');
 export const imageModal = document.querySelector('.popup_type_image');
 
-export const editForm = editProfileModal.querySelector('.popup__form');
+export const editProfileForm = editProfileModal.querySelector('.popup__form');
 export const addCardForm = addCardModal.querySelector('.popup__form');
 
 export const openModalButton = document.querySelector('.profile__edit');
@@ -13,8 +13,8 @@ export const addCardModalCloseButton = addCardModal.querySelector('.popup__close
 export const editProfileModalCloseButton = editProfileModal.querySelector('.popup__close-button');
 export const openImageModalCloseButton = imageModal.querySelector('.popup__close-button');
 
-export const nameInput = editForm.querySelector('.popup__input_type_name');
-export const jobInput = editForm.querySelector('.popup__input_type_job');
+export const nameInput = editProfileForm.querySelector('.popup__input_type_name');
+export const jobInput = editProfileForm.querySelector('.popup__input_type_job');
 
 export const placeInput = addCardForm.querySelector('.popup__input_type_place');
 export const urlInput = addCardForm.querySelector('.popup__input_type_url');

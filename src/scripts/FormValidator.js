@@ -9,7 +9,6 @@ export class FormValidator {
         this._errorClass = setting.errorClass;
     };
 
-    // Функция, которая добавляет код с ошибкой
     _showInputError(inputElement, errorMessage) {
         const errorElement = this._formElement.querySelector(`#${inputElement.name}-error`)
         inputElement.classList.add(this._inputErrorClass);
@@ -17,14 +16,12 @@ export class FormValidator {
         errorElement.classList.add(this._errorClass);
     }
 
-    //Функция определения валидности ввода
     _isFormValid(inputs) {
         return inputs.some((inputElement) => {
             return !inputElement.validity.valid;
         });
     };
 
-    // Функция показа кнопки
     enableSubmitButton() {
         const buttonList = Array.from(document.querySelectorAll(this._submitButtonSelector));
         buttonList.forEach((buttonElement) => {
@@ -33,7 +30,6 @@ export class FormValidator {
         })
     }
 
-    // Функция скрытия кнопки
     disableSubmitButton() {
         const buttonList = Array.from(document.querySelectorAll(this._submitButtonSelector));
         buttonList.forEach((buttonElement) => {
@@ -42,7 +38,6 @@ export class FormValidator {
         });
     };
 
-    //Функция, которая измеяет кнопку отправки формы
     _toggleButtonState(inputs, submitButtonSelector) {
         if (this._isFormValid(inputs)) {
             this.disableSubmitButton();
@@ -51,7 +46,6 @@ export class FormValidator {
         }
     }
 
-    // Фукнция очистки форм от ошибок
     clearInputErrors() {
         const inputList = Array.from(this._formElement.querySelectorAll(this._inputSelector));
         const errorList = Array.from(this._formElement.querySelectorAll(this._errorInputSelector));
@@ -68,7 +62,6 @@ export class FormValidator {
         })
     }
 
-    // Функция, которая удаляет код с ошибкой
     _hideInputError(inputElement) {
         const errorElement = this._formElement.querySelector(`#${inputElement.name}-error`)
         inputElement.classList.remove(this._inputErrorClass);
@@ -76,7 +69,6 @@ export class FormValidator {
         errorElement.textContent = '';
     }
 
-    // Функция, которая показывает/скрывает сообщение об ошибке
     _checkInputValidity(inputElement) {
         if (!inputElement.validity.valid) {
             this._showInputError(inputElement, inputElement.validationMessage);
@@ -85,7 +77,6 @@ export class FormValidator {
         }
     };
 
-    // Обработчики элементов ввода
     _setEventListeners() {
         const inputs = Array.from(this._formElement.querySelectorAll(this._inputSelector));
         const buttonSubmit = this._formElement.querySelector(this._submitButtonSelector);
@@ -99,7 +90,6 @@ export class FormValidator {
         });
     }
 
-    //Функция, которая отменяет стандартное поведение  и вызывает обработчик
     enableValidation() {
         this._formElement.addEventListener('sumbit', (evt) => {
             evt.preventDefault();
@@ -108,4 +98,3 @@ export class FormValidator {
     };
 
 }
-
