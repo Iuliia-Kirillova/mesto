@@ -4,10 +4,10 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const WebpackMd5Hash = require('webpack-md5-hash');
 
 module.exports = {
-    entry: './src/index.js',
+    entry: './src/pages/index.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: '[name].[chunkhash].js'
+        filename: 'main.js'
     },
 
     module: {

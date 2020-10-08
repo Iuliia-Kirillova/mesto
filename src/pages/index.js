@@ -1,43 +1,29 @@
-import { Card } from './scripts/Card.js';
-import { FormValidator } from './scripts/FormValidator.js';
-import { Section } from './scripts/Section.js';
-import { UserInfo } from './scripts/UserInfo.js';
-import { PopupWithImage } from './scripts/PopupWithImage.js';
-import { PopupWithForm }  from './scripts/PopupWithForm.js';
+import { Card } from '../components/Card.js';
+import { FormValidator } from '../components/FormValidator.js';
+import { Section } from '../components/Section.js';
+import { UserInfo } from '../components/UserInfo.js';
+import { PopupWithImage } from '../components/PopupWithImage.js';
+import { PopupWithForm }  from '../components/PopupWithForm.js';
 import {
-    profileSelectors,
-    addCardModal,
-    editProfileModal,
-    imageModal,
     editProfileForm,
     addCardForm,
     openModalButton,
     openAddCardModalButton,
-    addCardModalCloseButton,
-    editProfileModalCloseButton,
-    openImageModalCloseButton,
     nameInput,
     jobInput,
     placeInput,
     urlInput,
     title,
     subtitle,
-    imageModalTitle,
-    imageModalImg,
-    templateSelector,
-    cardTemplate,
     list,
-    escCode,
-    closeEsc,
-    openModalWindow,
-    closeModalWindow
-} from './scripts/utils.js';
-import { initialCards } from './scripts/utils.js';
-import { setting } from './scripts/utils.js';
+} from '../components/utils.js';
+import { initialCards } from '../components/utils.js';
+import { setting } from '../components/utils.js';
 
-import "./pages/index.css";
+import "./index.css";
 
-const popupWithImage = new PopupWithImage(imageModal);
+const popupWithImage = new PopupWithImage('.popup_type_image');
+
 const userInfo = new UserInfo(title, subtitle);
 
 const editFormValidator = new FormValidator(setting, editProfileForm);
@@ -50,7 +36,6 @@ function getCard(item) {
 	const card = new Card(item, '.template-card', {
 		handleCardClick: () => {
 			popupWithImage.open(card);
-			popupWithImage.setEventListeners();
 		}
 	});
 	return card
@@ -60,40 +45,25 @@ const cardsList = new Section({
 	items: initialCards,
 	renderer: (item) => {
 		const card = getCard(item);
-		// Создаём карточку и возвращаем наружу
 		const cardElement = card.generateCard();
-		// Добавляем в DOM
 		cardsList.addItem(cardElement, true);
-
 	}
 },
 	list
 );
 
 const popupPlaceForm = new PopupWithForm({
-	popupSelector: addCardModal,
+	popupSelector: '.popup_type_add-card',
 	submitHandler: () => {
-		// debugger
 		const cardAdd = { name: placeInput.value, link: urlInput.value };
-		const newCards = new Section({
-			items: cardAdd,
-			renderer: (item) => {
-				const card = getCard(item);
-				// Создаём карточку и возвращаем наружу
-				const cardElement = card.generateCard();
-				// Добавляем в DOM
-				newCards.addItem(cardElement);
-			}
-		},
-			list
-		);
+		const newCards = cardsList;
 		newCards.renderItem(cardAdd);
 		popupPlaceForm.close();
 	}
 });
 
 const profile = new PopupWithForm({
-	popupSelector: editProfileModal,
+	popupSelector: '.popup_type_edit-profile',
 	submitHandler: () => {
 		userInfo.setUserInfo(nameInput, jobInput);
 		profile.close();
@@ -114,9 +84,12 @@ openAddCardModalButton.addEventListener('click', () => {
 	cardFormValidator.clearInputErrors();
     popupPlaceForm.open();
     addCardForm.reset()
-	popupPlaceForm.setEventListeners();
 });
 
 profile.setEventListeners();
+
+popupPlaceForm.setEventListeners();
+
+popupWithImage.setEventListeners();
 
 cardsList.rendererItems();
