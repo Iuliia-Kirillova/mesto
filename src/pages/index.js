@@ -3,28 +3,28 @@ import { FormValidator } from '../components/FormValidator.js';
 import { Section } from '../components/Section.js';
 import { UserInfo } from '../components/UserInfo.js';
 import { PopupWithImage } from '../components/PopupWithImage.js';
-import { PopupWithForm }  from '../components/PopupWithForm.js';
+import { PopupWithForm } from '../components/PopupWithForm.js';
 import {
-    editProfileForm,
-    addCardForm,
-    openModalButton,
-    openAddCardModalButton,
-    nameInput,
-    jobInput,
-    placeInput,
-    urlInput,
-    title,
-    subtitle,
-    list,
-} from '../components/utils.js';
-import { initialCards } from '../components/utils.js';
-import { setting } from '../components/utils.js';
+	editProfileForm,
+	addCardForm,
+	openModalButton,
+	openAddCardModalButton,
+	nameInput,
+	jobInput,
+	placeInput,
+	urlInput,
+	title,
+	subtitle,
+	list,
+} from '../utils/constants.js';
+import { initialCards } from '../utils/constants.js';
+import { setting } from '../utils/constants.js';
 
 import "./index.css";
 
 const popupWithImage = new PopupWithImage('.popup_type_image');
 
-const userInfo = new UserInfo(title, subtitle);
+const userInfo = new UserInfo('.profile__title', '.profile__subtitle');
 
 const editFormValidator = new FormValidator(setting, editProfileForm);
 const cardFormValidator = new FormValidator(setting, addCardForm);
@@ -49,15 +49,14 @@ const cardsList = new Section({
 		cardsList.addItem(cardElement, true);
 	}
 },
-	list
+	'.elements'
 );
 
 const popupPlaceForm = new PopupWithForm({
 	popupSelector: '.popup_type_add-card',
 	submitHandler: () => {
 		const cardAdd = { name: placeInput.value, link: urlInput.value };
-		const newCards = cardsList;
-		newCards.renderItem(cardAdd);
+		cardsList.renderItem(cardAdd);
 		popupPlaceForm.close();
 	}
 });
@@ -77,13 +76,13 @@ openModalButton.addEventListener('click', () => {
 	const userProfileInfo = userInfo.getUserInfo();
 	nameInput.value = userProfileInfo.name;
 	jobInput.value = userProfileInfo.info;
-    profile.open();   
+	profile.open();
 });
 
 openAddCardModalButton.addEventListener('click', () => {
 	cardFormValidator.clearInputErrors();
-    popupPlaceForm.open();
-    addCardForm.reset()
+	popupPlaceForm.open();
+	addCardForm.reset()
 });
 
 profile.setEventListeners();
