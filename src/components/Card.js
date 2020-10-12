@@ -21,12 +21,9 @@ export class Card {
         this._card = this._getTemplate();
         this._setEventListeners();
 
-        this._cardPictures = this._card.querySelector('.element__photo');
-        this._cardTitle = this._card.querySelector('.element__name');
-
-        this._cardPictures.src = this._image;
-        this._cardTitle.textContent = this._titleCard;
-        this._cardPictures.alt = this._titleCard;
+        this._card.querySelector('.element__photo').src = this._image;
+        this._card.querySelector('.element__name').textContent = this._title;
+        this._card.querySelector('.element__photo').alt = this._title;
 
         return this._card;
     }

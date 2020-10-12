@@ -1,9 +1,12 @@
 @import url(./__photo/element__photo.css);
 @import url(./__caption/element__caption.css);
 @import url(./__name/element__name.css);
+@import url(./__hearts/element__hearts.css);
 @import url(./__heart/element__heart.css);
 @import url(./_like/element__heart_like.css);
 @import url(./__delete/element__delete.css);
+@import url(./__heart-count/element__heart-count.css);
+
 
 .element {
     position: relative;
