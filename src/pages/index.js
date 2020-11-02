@@ -35,9 +35,9 @@ const cardForm = new FormValidator(setting, '.form__card');
 const avatarForm = new FormValidator(setting, '.form__avatar');
 
 const api = new Api({
-	url: 'https://mesto.nomoreparties.co/v1/cohort-16/',
+	url: 'https://mesto.nomoreparties.co/v1/cohort-17/',
 	headers: {
-		authorization: 'c64f71c0-b047-4439-8dc8-85f940b5098e',
+		authorization: '3c342042-7509-4c70-8adf-ec3f335d930a',
 		'Content-Type': 'application/json'
 	},
 });

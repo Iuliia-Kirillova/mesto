@@ -1,7 +1,7 @@
 {
-	"name": "yandex_praktikum.mesto",
+	"name": "Mesto",
 	"version": "0.0.1",
-	"description": "Project for storing, adding and viewing images.",
+	"description": "Project",
 	"main": "index.js",
 	"dependencies": {
 		"babel-polyfill": "^6.26.0",
