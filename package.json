@@ -35,8 +35,8 @@
 	},
 	"scripts": {
 		"build": "rimraf dist && webpack",
-		"buildnew": "webpack",
-		"dev": "webpack-dev-server --open --watch --hot"
+		"dev": "webpack-dev-server --open --watch --hot",
+		"deploy": "gh-pages -d dist"
 	},
 	"husky": {
 		"hooks": {
@@ -58,5 +58,5 @@
 	"bugs": {
 		"url": "https://github.com/Iuliia-Kirillova/mesto/issues"
 	},
-	"homepage": "https://github.com/Iuliia-Kirillova/mesto#readme"
+	"homepage": "https://github.com/Iuliia-Kirillova/mesto"
 }
