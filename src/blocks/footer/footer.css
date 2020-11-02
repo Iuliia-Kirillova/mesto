@@ -1,5 +1,20 @@
-@import url(./__author/footer__author.css);
+@import url(./__copyright/footer__copyright.css);
 
 .footer {
-    align-content: flex-start;
+  max-width: 882px;
+  margin: 0 auto 60px;
+}
+
+@media screen and (max-width: 880px) {
+  .footer {
+    max-width: 580px;
+    margin: 0 auto 42px;
+  }
+}
+
+@media screen and (max-width: 580px) {
+  .footer {
+    max-width: 282px;
+    margin: 0 auto 36px;
+  }
 }

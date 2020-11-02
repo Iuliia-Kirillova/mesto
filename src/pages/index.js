@@ -1,94 +1,218 @@
+import './index.css';
+import {
+	popupProfile,
+	popupPlace,
+	popupProfileOpenButton,
+	popupPlaceAddButton,
+	nameInput,
+	jobInput,
+	pictureInput,
+	titleInput,
+	placeForm,
+	placeNameInput,
+	placeJobInput,
+	popupImage,
+	cardsContainer,
+	setting,
+	popupWithSubmit,
+	popupAvatar,
+	popupAvatarOpenButton,
+	placeAvatarInput,
+	avatarInput,
+} from '../utils/constants.js';
 import { Card } from '../components/Card.js';
 import { FormValidator } from '../components/FormValidator.js';
 import { Section } from '../components/Section.js';
-import { UserInfo } from '../components/UserInfo.js';
 import { PopupWithImage } from '../components/PopupWithImage.js';
 import { PopupWithForm } from '../components/PopupWithForm.js';
-import {
-	editProfileForm,
-	addCardForm,
-	openModalButton,
-	openAddCardModalButton,
-	nameInput,
-	jobInput,
-	placeInput,
-	urlInput,
-	title,
-	subtitle,
-	list,
-} from '../utils/constants.js';
-import { initialCards } from '../utils/constants.js';
-import { setting } from '../utils/constants.js';
+import { UserInfo } from '../components/UserInfo.js';
+import { Api } from '../components/Api.js';
 
-import "./index.css";
+const popupWithImage = new PopupWithImage(popupImage);
+const userInfo = new UserInfo(placeNameInput, placeJobInput, placeAvatarInput);
+const editForm = new FormValidator(setting, '.form__edit');
+const cardForm = new FormValidator(setting, '.form__card');
+const avatarForm = new FormValidator(setting, '.form__avatar');
 
-const popupWithImage = new PopupWithImage('.popup_type_image');
+const api = new Api({
+	url: 'https://mesto.nomoreparties.co/v1/cohort-16/',
+	headers: {
+		authorization: 'c64f71c0-b047-4439-8dc8-85f940b5098e',
+		'Content-Type': 'application/json'
+	},
+});
 
-const userInfo = new UserInfo('.profile__title', '.profile__subtitle');
+Promise.all([
+	api.getUserData(),
+	api.getInitialCards()
+])
+	.then((values) => {
+		const [userData, initialCards] = values;
 
-const editFormValidator = new FormValidator(setting, editProfileForm);
-const cardFormValidator = new FormValidator(setting, addCardForm);
+		userInfo.getUserInfo(userData);
+		userInfo.setUserInfo(userData);
 
-editFormValidator.enableValidation();
-cardFormValidator.enableValidation();
+		const cardsArray = renderCards(initialCards, userData);
+		cardsArray.rendererItems();
+	})
+	.catch((err) => {
+		console.log(err);
+	})
 
-function getCard(item) {
-	const card = new Card(item, '.template-card', {
-		handleCardClick: () => {
-			popupWithImage.open(card);
+function renderCards(data, user) {
+	const cardsList = new Section({
+		items: data,
+		renderer: (item) => {
+			const card = getCard(item, user);
+
+			const cardElement = card.generateCard();
+			cardsList.addItem(cardElement);
 		}
-	});
-	return card
+	},
+		cardsContainer,
+		'https://mesto.nomoreparties.co/v1/cohort-16/cards'
+	);
+	return cardsList
 }
 
-const cardsList = new Section({
-	items: initialCards,
-	renderer: (item) => {
-		const card = getCard(item);
-		const cardElement = card.generateCard();
-		cardsList.addItem(cardElement, true);
-	}
-},
-	'.elements'
-);
-
 const popupPlaceForm = new PopupWithForm({
-	popupSelector: '.popup_type_add-card',
+	popupSelector: popupPlace,
 	submitHandler: () => {
-		const cardAdd = { name: placeInput.value, link: urlInput.value };
-		cardsList.renderItem(cardAdd);
-		popupPlaceForm.close();
+		popupPlaceForm.renderLoading(true);
+		const apiNewCard = api.addCards({
+			name: titleInput.value,
+			link: pictureInput.value,
+		});
+		apiNewCard.then((data) => {
+			popupPlaceForm.renderLoading(false);
+			const newCard = renderCards(data, data.owner._id);
+			newCard.renderItem(data, data.owner._id);
+			popupPlaceForm.close();
+		})
+			.catch((err) => {
+				console.log(`Ошибка: ${err}`);
+			})
 	}
 });
 
 const profile = new PopupWithForm({
-	popupSelector: '.popup_type_edit-profile',
+	popupSelector: popupProfile,
 	submitHandler: () => {
-		userInfo.setUserInfo(nameInput, jobInput);
-		profile.close();
+		profile.renderLoading(true);
+		const apiEditUser = api.editUserData({
+			name: nameInput.value,
+			about: jobInput.value
+		});
+		apiEditUser.then((data) => {
+			userInfo.setUserInfo(data);
+			profile.renderLoading(false)
+			profile.close();
+		})
+			.catch((err) => {
+				console.log(`Ошибка: ${err}`);
+			})
 	}
 });
 
-openModalButton.addEventListener('click', () => {
-	editFormValidator.clearInputErrors();
-	editFormValidator.enableSubmitButton();
+const avatar = new PopupWithForm({
+	popupSelector: popupAvatar,
+	submitHandler: () => {
+		avatar.renderLoading(true);
+		const apiUser = api.editAvatar({ avatar: avatarInput.value });
 
-	const userProfileInfo = userInfo.getUserInfo();
-	nameInput.value = userProfileInfo.name;
-	jobInput.value = userProfileInfo.info;
-	profile.open();
-});
+		apiUser.then((data) => {
+			const userData = userInfo.getUserInfo(data);
+			userInfo.saveUserInfo(userData, placeNameInput, placeJobInput, placeAvatarInput);
+			avatar.renderLoading(false);
+			avatar.close();
+		})
+			.catch((err) => {
+				console.log(`Ошибка: ${err}`);
+			})
+	}
+})
 
-openAddCardModalButton.addEventListener('click', () => {
-	cardFormValidator.clearInputErrors();
+function getCard(item, user) {
+	const card = new Card(item, user, '.template-card',
+		{
+			handleCardClick: () => {
+				popupWithImage.open(item);
+				popupWithImage.setEventListeners();
+			}
+		},
+		{
+			deleteCard: () => {
+				const popupSubmit = new PopupWithForm({
+					popupSelector: popupWithSubmit,
+					submitHandler: () => {
+						const apiDeleteCard = api.deleteCard(item);
+						apiDeleteCard.then(() => {
+							card.removeCard();
+							popupSubmit.close();
+
+						})
+							.catch((err) => {
+								console.log(`Ошибка: ${err}`);
+							});
+					}
+				});
+				popupSubmit.open();
+				popupSubmit.setEventListeners();
+			},
+			addLike: () => {
+				const apiLikeCard = api.addLike(card);
+				apiLikeCard.then((data) => {
+					card.setLikesCounter(data);
+				})
+					.catch((err) => {
+						console.log(`Ошибка: ${err}`);
+					});
+			},
+			removeLike: () => {
+				const apiRemoveLike = api.removeLikes(card);
+				apiRemoveLike.then((data) => {
+					card.setLikesCounter(data);
+				})
+					.catch((err) => {
+						console.log(`Ошибка: ${err}`);
+					});
+			}
+		},
+		'https://mesto.nomoreparties.co/v1/cohort-16/cards');
+	return card
+}
+
+popupAvatarOpenButton.addEventListener('click', () => {
+	avatarForm.disabledValidation();
+	avatarForm.disableSubmitButton();
+	avatar.open();
+	avatar.setEventListeners();
+})
+
+popupPlaceAddButton.addEventListener('click', () => {
+	cardForm.disabledValidation();
+	cardForm.disableSubmitButton();
+	placeForm.reset();
 	popupPlaceForm.open();
-	addCardForm.reset()
+	popupPlaceForm.setEventListeners();
 });
 
-profile.setEventListeners();
+popupProfileOpenButton.addEventListener('click', () => {
+	editForm.disabledValidation();
+	editForm.enableSubmitButton();
+	const apiUser = api.getUserData();
+	apiUser.then((data) => {
+		const userData = userInfo.getUserInfo(data);
+		userInfo.saveUserInfo(userData, nameInput, jobInput, avatarInput);
+		nameInput.value = placeNameInput.textContent;
+		jobInput.value = placeJobInput.textContent;
+		profile.open();
+		profile.setEventListeners();
+	})
+		.catch((err) => {
+			console.log(`Ошибка: ${err}`);
+		})
+});
 
-popupPlaceForm.setEventListeners();
-
-popupWithImage.setEventListeners();
-
-cardsList.rendererItems();
+editForm.enableValidation();
+cardForm.enableValidation();
