@@ -70,7 +70,7 @@ function renderCards(data, user) {
 		}
 	},
 		cardsContainer,
-		'https://mesto.nomoreparties.co/v1/cohort-16/cards'
+		'https://mesto.nomoreparties.co/v1/cohort-17/cards'
 	);
 	return cardsList
 }
@@ -178,7 +178,7 @@ function getCard(item, user) {
 					});
 			}
 		},
-		'https://mesto.nomoreparties.co/v1/cohort-16/cards');
+		'https://mesto.nomoreparties.co/v1/cohort-17/cards');
 	return card
 }
 
