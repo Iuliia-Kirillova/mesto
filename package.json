@@ -4,9 +4,11 @@
   "description": "Project",
   "main": "index.js",
   "dependencies": {
+    "add": "^2.0.6",
     "babel-polyfill": "^6.26.0",
     "core-js": "^3.6.5",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "yarn": "^1.22.10"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.1",

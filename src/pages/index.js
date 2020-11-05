@@ -34,6 +34,8 @@ const editForm = new FormValidator(setting, '.form__edit');
 const cardForm = new FormValidator(setting, '.form__card');
 const avatarForm = new FormValidator(setting, '.form__avatar');
 
+let user = null;
+
 const api = new Api({
 	url: 'https://mesto.nomoreparties.co/v1/cohort-17/',
 	headers: {
@@ -42,38 +44,15 @@ const api = new Api({
 	},
 });
 
-Promise.all([
-	api.getUserData(),
-	api.getInitialCards()
-])
-	.then((values) => {
-		const [userData, initialCards] = values;
-
-		userInfo.getUserInfo(userData);
-		userInfo.setUserInfo(userData);
-
-		const cardsArray = renderCards(initialCards, userData);
-		cardsArray.rendererItems();
-	})
-	.catch((err) => {
-		console.log(err);
-	})
-
-function renderCards(data, user) {
-	const cardsList = new Section({
-		items: data,
-		renderer: (item) => {
-			const card = getCard(item, user);
-
-			const cardElement = card.generateCard();
-			cardsList.addItem(cardElement);
-		}
-	},
-		cardsContainer,
-		'https://mesto.nomoreparties.co/v1/cohort-17/cards'
-	);
-	return cardsList
-}
+const cardsList = new Section({
+	renderer: (item) => {
+		const card = getCard(item, user);
+		const cardElement = card.generateCard();
+		cardsList.addItem(cardElement);
+	}
+},
+	cardsContainer
+);
 
 const popupPlaceForm = new PopupWithForm({
 	popupSelector: popupPlace,
@@ -85,8 +64,9 @@ const popupPlaceForm = new PopupWithForm({
 		});
 		apiNewCard.then((data) => {
 			popupPlaceForm.renderLoading(false);
-			const newCard = renderCards(data, data.owner._id);
-			newCard.renderItem(data, data.owner._id);
+			const card = getCard(data, data.owner._id);
+			const cardElement = card.generateCard();
+			cardsList.addItem(cardElement);
 			popupPlaceForm.close();
 		})
 			.catch((err) => {
@@ -216,3 +196,21 @@ popupProfileOpenButton.addEventListener('click', () => {
 
 editForm.enableValidation();
 cardForm.enableValidation();
+
+Promise.all([
+	api.getUserData(),
+	api.getInitialCards()
+])
+	.then((values) => {
+		const [userData, initialCards] = values;
+
+		userInfo.getUserInfo(userData);
+		userInfo.setUserInfo(userData);
+
+		user = userData;
+		cardsList.rendererItems(initialCards);
+	})
+	.catch((err) => {
+		console.log(err);
+	})
+
